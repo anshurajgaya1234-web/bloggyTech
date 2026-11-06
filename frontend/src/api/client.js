@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+// Backend API URL
+const API_BASE_URL = `${import.meta.env.VITE_API_URL || ''
+  }/api/v1`;
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -10,25 +12,23 @@ export const apiClient = axios.create({
   timeout: 30000,
 });
 
-// Request interceptor: attach JWT bearer token if available
+// Attach JWT token to requests
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('blogitech_token');
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor: standardize error format
+// Handle API errors
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     const customError = {
       message:
@@ -39,9 +39,9 @@ apiClient.interceptors.response.use(
       status: error.response?.status,
       data: error.response?.data,
     };
+
     return Promise.reject(customError);
   }
 );
 
 export default apiClient;
-
