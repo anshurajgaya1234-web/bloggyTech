@@ -41,6 +41,13 @@ app.use("/api/v1/posts",postsRouter)
 //?Setup the Comment Router
 app.use("/api/v1/comments",commentsRouter);
 
+app.get("/", (req, res) => {
+    res.status(200).json({
+        status: "success",
+        message: "BloggyTech Backend is running"
+    });
+});
+
 app.use(notFound)// this is guranteed ki agar ye wala middleware nahi chal raha hai  toh error aya hoga
 //?setup the global error handlery
 app.use(globalErrorHandler)// jab hum asynchandler may code daltay hai toh usmay error atay hi chala jayega global exception handler kay pass
