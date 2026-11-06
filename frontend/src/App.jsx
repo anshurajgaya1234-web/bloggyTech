@@ -23,7 +23,6 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
-import VerifyAccountPage from './pages/auth/VerifyAccountPage';
 
 // Dashboard Pages
 import DashboardOverviewPage from './pages/dashboard/DashboardOverviewPage';
@@ -68,9 +67,8 @@ export const App = () => {
               <Route path="/search" element={<SearchResultsPage />} />
               <Route path="/author/:authorId" element={<AuthorProfilePage />} />
 
-              {/* Public verification & reset routes */}
+              {/* Public reset route */}
               <Route path="/reset-password/:resetToken" element={<ResetPasswordPage />} />
-              <Route path="/verify-account/:verifyToken" element={<VerifyAccountPage />} />
 
               {/* Guest Only Routes (wrapped in AppLayout) */}
               <Route
@@ -126,4 +124,3 @@ export const App = () => {
 };
 
 export default App;
-

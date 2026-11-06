@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useToast } from '../../context/ToastContext';
-import { authApi } from '../../api/auth';
 import Badge from '../../components/common/Badge';
 import {
   BookOpen,
@@ -14,16 +12,11 @@ import {
   ExternalLink,
   Edit2,
   Calendar,
-  AlertTriangle,
-  Mail,
-  ShieldCheck,
   CheckCircle2,
 } from 'lucide-react';
 
 export const DashboardOverviewPage = () => {
   const { user, userProfile, refreshProfile } = useAuth();
-  const { success, error } = useToast();
-  const [isSendingVerify, setIsSendingVerify] = useState(false);
 
   useEffect(() => {
     refreshProfile();
@@ -37,20 +30,6 @@ export const DashboardOverviewPage = () => {
 
   // Calculate total claps across user's posts
   const totalClaps = posts.reduce((sum, p) => sum + (p.claps || 0), 0);
-
-  const isVerified = Boolean(profile.isVerified);
-
-  const handleSendVerify = async () => {
-    setIsSendingVerify(true);
-    try {
-      const res = await authApi.sendVerificationEmail();
-      success(res?.message || 'Verification email sent!');
-    } catch (err) {
-      error(err.message || 'Failed to send verification email');
-    } finally {
-      setIsSendingVerify(false);
-    }
-  };
 
   const statCards = [
     {
@@ -92,15 +71,6 @@ export const DashboardOverviewPage = () => {
             <h1 className="text-2xl font-bold text-content tracking-tight">
               Welcome, {profile.username || 'Creator'}
             </h1>
-            {isVerified ? (
-              <Badge variant="success" size="xs">
-                Verified
-              </Badge>
-            ) : (
-              <Badge variant="warning" size="xs">
-                Unverified
-              </Badge>
-            )}
           </div>
           <p className="text-xs text-content-secondary mt-1">
             Overview of your published content, audience reach, and publishing stats.
@@ -114,29 +84,6 @@ export const DashboardOverviewPage = () => {
           <PenSquare className="w-3.5 h-3.5" /> Write New Article
         </Link>
       </div>
-
-      {/* Account Verification Prompt (if unverified) */}
-      {!isVerified && (
-        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="text-xs font-semibold text-amber-900">Verify Your Email Address</h4>
-              <p className="text-xs text-amber-750 mt-0.5">
-                Verifying your account confirms ownership of your email address and unlocks full community credibility.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={handleSendVerify}
-            disabled={isSendingVerify}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-amber-300 text-xs font-semibold text-amber-800 hover:bg-amber-100 transition-colors shadow-2xs whitespace-nowrap disabled:opacity-50"
-          >
-            <Mail className="w-3.5 h-3.5" />
-            {isSendingVerify ? 'Sending...' : 'Send Verification Email'}
-          </button>
-        </div>
-      )}
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -237,4 +184,3 @@ export const DashboardOverviewPage = () => {
 };
 
 export default DashboardOverviewPage;
-

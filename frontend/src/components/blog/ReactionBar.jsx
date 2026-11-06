@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { postsApi } from '../../api/posts';
-import { ThumbsUp, ThumbsDown, Sparkles, Share2, Check, Bookmark } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const ReactionBar = ({ post, onPostUpdated }) => {
@@ -21,7 +21,6 @@ export const ReactionBar = ({ post, onPostUpdated }) => {
     if (!user || !post?.dislike) return false;
     return post.dislike.some((id) => (typeof id === 'object' ? id._id === user._id : id === user._id));
   });
-  const [isCopied, setIsCopied] = useState(false);
   const [isActing, setIsActing] = useState(false);
 
   const requireAuth = () => {
@@ -89,21 +88,9 @@ export const ReactionBar = ({ post, onPostUpdated }) => {
     }
   };
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setIsCopied(true);
-      success('Article link copied to clipboard!');
-      setTimeout(() => setIsCopied(false), 2500);
-    } catch {
-      info('Copy URL: ' + window.location.href);
-    }
-  };
-
   return (
-    <div className="flex items-center justify-between py-4 border-y border-border my-8">
-      {/* Reactions Group */}
-      <div className="flex items-center gap-2 sm:gap-4">
+    <div className="my-8 border-y border-border py-5">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         {/* Claps */}
         <button
           onClick={handleClap}
@@ -144,30 +131,8 @@ export const ReactionBar = ({ post, onPostUpdated }) => {
           <span>{dislikesCount}</span>
         </button>
       </div>
-
-      {/* Share & Actions */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={handleShare}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-canvas-subtle text-content-secondary hover:text-content transition-colors text-xs font-medium"
-          title="Share article"
-        >
-          {isCopied ? (
-            <>
-              <Check className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-emerald-700">Copied</span>
-            </>
-          ) : (
-            <>
-              <Share2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Share</span>
-            </>
-          )}
-        </button>
-      </div>
     </div>
   );
 };
 
 export default ReactionBar;
-

@@ -34,18 +34,6 @@ export const authApi = {
     return response.data;
   },
 
-  // Send account verification email: PUT /api/v1/users/account-verification-email
-  sendVerificationEmail: async () => {
-    const response = await apiClient.put('/users/account-verification-email');
-    return response.data;
-  },
-
-  // Verify account token: PUT /api/v1/users/verify-account/:verifyToken
-  verifyAccount: async (verifyToken) => {
-    const response = await apiClient.put(`/users/verify-account/${verifyToken}`);
-    return response.data;
-  },
 };
 
 export default authApi;
-

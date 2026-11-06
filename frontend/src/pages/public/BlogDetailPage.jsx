@@ -10,7 +10,7 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorState from '../../components/common/ErrorState';
 import ReactionBar from '../../components/blog/ReactionBar';
 import CommentSection from '../../components/blog/CommentSection';
-import { Calendar, Clock, ArrowLeft, UserPlus, UserCheck, Share2 } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, UserPlus, UserCheck } from 'lucide-react';
 
 export const BlogDetailPage = () => {
   const { id } = useParams();
@@ -229,7 +229,7 @@ export const BlogDetailPage = () => {
         })}
       </div>
 
-      {/* Reaction & Sharing Bar */}
+      {/* Article reactions */}
       <ReactionBar post={post} onPostUpdated={fetchPostDetails} />
 
       {/* Author Bio Card */}
@@ -268,4 +268,3 @@ export const BlogDetailPage = () => {
 };
 
 export default BlogDetailPage;
-

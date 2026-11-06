@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import Navbar from '../common/Navbar';
 import Footer from '../common/Footer';
@@ -6,39 +6,17 @@ import ToastContainer from '../common/ToastContainer';
 import Avatar from '../common/Avatar';
 import Badge from '../common/Badge';
 import { useAuth } from '../../context/AuthContext';
-import { useToast } from '../../context/ToastContext';
-import { authApi } from '../../api/auth';
 import {
   LayoutDashboard,
   BookOpen,
   PenSquare,
   FolderTree,
   UserCheck,
-  AlertTriangle,
-  Mail,
-  ChevronRight,
-  ShieldCheck,
 } from 'lucide-react';
 
 export const DashboardLayout = () => {
-  const { user, userProfile, refreshProfile } = useAuth();
-  const { success, error } = useToast();
+  const { user, userProfile } = useAuth();
   const location = useLocation();
-  const [isSendingVerify, setIsSendingVerify] = useState(false);
-
-  const isVerified = userProfile?.isVerified ?? user?.isVerified;
-
-  const handleSendVerification = async () => {
-    setIsSendingVerify(true);
-    try {
-      const res = await authApi.sendVerificationEmail();
-      success(res?.message || 'Verification email sent! Check your inbox.');
-    } catch (err) {
-      error(err.message || 'Failed to send verification email');
-    } finally {
-      setIsSendingVerify(false);
-    }
-  };
 
   const navLinks = [
     {
@@ -75,30 +53,8 @@ export const DashboardLayout = () => {
       <Navbar />
       <ToastContainer />
 
-      {/* Account Verification Warning Banner */}
-      {!isVerified && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-amber-900">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
-              <span>
-                Your account is currently <strong>unverified</strong>. Please verify your email to unlock all publishing features.
-              </span>
-            </div>
-            <button
-              onClick={handleSendVerification}
-              disabled={isSendingVerify}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-amber-300 rounded-md font-medium text-amber-800 hover:bg-amber-100 transition-colors shadow-2xs disabled:opacity-50"
-            >
-              <Mail className="w-3.5 h-3.5" />
-              {isSendingVerify ? 'Sending...' : 'Send Verification Email'}
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Main Dashboard Layout */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Sidebar */}
           <aside className="lg:col-span-3 bg-white border border-border rounded-xl p-5 shadow-subtle space-y-6">
@@ -112,9 +68,6 @@ export const DashboardLayout = () => {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <h3 className="text-sm font-semibold text-content truncate">{user?.username}</h3>
-                  {isVerified && (
-                    <ShieldCheck className="w-3.5 h-3.5 text-brand-600 flex-shrink-0" title="Verified Account" />
-                  )}
                 </div>
                 <p className="text-xs text-content-secondary truncate">{user?.email}</p>
                 <div className="mt-1 flex items-center gap-1">
@@ -178,4 +131,3 @@ export const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
-

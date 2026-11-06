@@ -2,19 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { usersApi } from '../../api/users';
-import { authApi } from '../../api/auth';
 import Avatar from '../../components/common/Avatar';
 import Badge from '../../components/common/Badge';
 import {
   UserCheck,
   Users,
-  ShieldCheck,
   ShieldAlert,
   Eye,
-  Mail,
   UserX,
   ExternalLink,
-  Calendar,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +19,6 @@ export const MyProfilePage = () => {
   const { success, error, info } = useToast();
 
   const [activeTab, setActiveTab] = useState('following'); // 'following' | 'followers' | 'blocked' | 'viewers'
-  const [isSendingVerify, setIsSendingVerify] = useState(false);
   const [actionInProgressId, setActionInProgressId] = useState(null);
 
   useEffect(() => {
@@ -35,20 +30,6 @@ export const MyProfilePage = () => {
   const followers = Array.isArray(profile.followers) ? profile.followers : [];
   const blockedUsers = Array.isArray(profile.blockedUsers) ? profile.blockedUsers : [];
   const profileViewers = Array.isArray(profile.profileViewers) ? profile.profileViewers : [];
-
-  const isVerified = Boolean(profile.isVerified);
-
-  const handleSendVerification = async () => {
-    setIsSendingVerify(true);
-    try {
-      const res = await authApi.sendVerificationEmail();
-      success(res?.message || 'Verification email sent! Check your inbox.');
-    } catch (err) {
-      error(err.message || 'Failed to dispatch email');
-    } finally {
-      setIsSendingVerify(false);
-    }
-  };
 
   const handleUnfollow = async (targetId, targetName) => {
     setActionInProgressId(targetId);
@@ -97,22 +78,6 @@ export const MyProfilePage = () => {
               </Badge>
             </div>
             <p className="text-xs text-content-secondary">{profile.email}</p>
-            <div className="flex items-center gap-2 pt-1">
-              {isVerified ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-                  <ShieldCheck className="w-3 h-3" /> Account Verified
-                </span>
-              ) : (
-                <button
-                  onClick={handleSendVerification}
-                  disabled={isSendingVerify}
-                  className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full hover:bg-amber-100 transition-colors disabled:opacity-50"
-                >
-                  <Mail className="w-3 h-3" />
-                  {isSendingVerify ? 'Sending...' : 'Send Verification Email'}
-                </button>
-              )}
-            </div>
           </div>
         </div>
       </div>
@@ -338,4 +303,3 @@ export const MyProfilePage = () => {
 };
 
 export default MyProfilePage;
-

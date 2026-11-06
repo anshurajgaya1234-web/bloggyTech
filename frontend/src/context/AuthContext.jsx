@@ -34,7 +34,6 @@ export const AuthProvider = ({ children }) => {
           username: res.user.username,
           email: res.user.email,
           role: res.user.role,
-          isVerified: res.user.isVerified,
           accountLevel: res.user.accountLevel,
           profilePicture: res.user.profilePicture,
         };
@@ -130,4 +129,3 @@ export const useAuth = () => {
 };
 
 export default AuthContext;
-
